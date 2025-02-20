@@ -12,18 +12,21 @@ height:650px;
 const Home = () => {
   const [word,setword]=useState("")
   const [data,setData]= useState("")
-  const [load,setLoad]= useState(true)
+  const [load,setLoad]= useState(false)
   
   const handleclick=()=>{
     console.log(word);
     fetchData()
   }
   const fetchData=()=>{
-    axios.get(`https://shayri-backend-nobq.onrender.com/shayri/${word}`).then((res)=>{
+    setLoad(true)
+    axios.get(`https://shayribackend.onrender.com/shayri/${word}`).then((res)=>{
       console.log(res.data)
-      setData(res.data.shayari.message.content);
+      setData(res.data.shayri.message.content);
+      setLoad(false)
     }).catch((err)=>{
       console.log(err);
+      setLoad(false)
     })
   }
   return (
@@ -42,13 +45,12 @@ const Home = () => {
             <Input placeholder="Generate a Shayari..." onChange={(e)=>setword(e.target.value)} ></Input>{" "}
             <Button backgroundColor={"blue.400"} color={"white"} onClick={handleclick}>
               {" "}
-              Search
+              Go!
             </Button>
           </Flex>
           <Center>
-      <Text color={'white'} fontFamily={'Croissant One'} padding={20} fontSize={30}>
-     
-      {data}
+      <Text color={'white'} fontFamily={'Croissant One'} padding={20} fontSize={20}>
+     {load?<Spinner color='pink.300' size={'xl'}/>:data}
       </Text>
         </Center>
         </Box>
@@ -56,5 +58,6 @@ const Home = () => {
     </Stack>
   );
 }
+//https://kulsoom-shayri-app.netlify.app/
 
 export default Home
